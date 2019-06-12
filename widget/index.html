@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang='zh-CN'>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="maximum-scale=1.0, minimum-scale=1.0, user-scalable=0, initial-scale=1.0, width=device-width"/>
+    <meta name="format-detection" content="telephone=no, email=no, date=no, address=no">
+    <title>WinA</title>
+    <link rel="stylesheet" type="text/css" href="../css/api,css">
+    <link rel="stylesheet" type="text/css" href="css/box.css" />
+    <script type="text/javascript" src="script/public.js"></script>
+    <style>
+            p{
+                    color:#999;
+                    padding:5px;
+            }
+    </style>
+        <head>        
+    </head>
+     <script type='text/javascript'>
+     function opbt(){
+        var obj = api.require('btmodule');
+        obj.OpenBT();
+        }
+        
+     function scanbt(){
+        var obj = api.require('btmodule');
+        obj.ScanBT();
+        }
+        
+     function readbt(){
+        var obj = api.require('btmodule');
+        var param = {
+        service: "6e400001-b5a3-f393-e0a9-e50e24dcca9e",
+        charUUID: "6e400002-b5a3-f393-e0a9-e50e24dcca9e"
+        };
+        obj.ReadBT(param, function(ret, err) {
+        var msg = ret.received;
+        api.toast({
+        msg: msg
+        });
+        });
+        }
+        
+     function writebt(){
+        var obj = api.require('btmodule');
+        var param = {
+        service: "6e400001-b5a3-f393-e0a9-e50e24dcca9e",
+        charUUID: "6e400002-b5a3-f393-e0a9-e50e24dcca9e",
+         data: 25
+         };
+         obj.WriteBT(param);
+        if(ret){
+         alert('xieshuchenggong');
+         }
+     }
+     
+       
+     function notifybt(){
+        var obj = api.require('btmodule');
+        var param = {
+        service: "6e400001-b5a3-f393-e0a9-e50e24dcca9e",
+        charUUID: "6e400003-b5a3-f393-e0a9-e50e24dcca9e",
+        enable: true
+        };
+        obj.NotifyBT(param, function(ret, err) {
+        var msg = ret.received;
+        api.toast({
+        msg: msg
+        });
+        });
+        }
+        
+     
+     
+    function disconnectbt(){
+       var obj = api.require('btmodule');
+       obj.DisConnectBT();
+       }
+       
+       
+    function closebt(){
+       var obj = api.require('btmodule');
+       obj.CloseBT();
+       }
+    
+    
+        </script>
+    
+   <body>
+    <div id="wrap">
+        <div id="main">
+                <br>
+                        <div class='itemtitle'>1.打开蓝牙</div>
+                        <div class="clickbtn" tapmode="active" onclick="opbt()" >打开蓝牙</div> 
+                        <div class='itemtitle'>2.连接蓝牙</div>
+                        <div class="clickbtn" tapmode="active" onclick="scanbt()" >连接蓝牙</div>
+                        <div class='itemtitle'>3.读取数据</div>
+                        <div class="clickbtn" tapmode="active" onclick="readbt()" >读取数据</div>  
+                        <div class='itemtitle'>3.写数据</div>
+                        <div class="clickbtn" tapmode="active" onclick="writebt()" >写数据</div>  
+                        <div class='itemtitle'>4.notify</div>
+                        <div class="clickbtn" tapmode="active" onclick="notifybt()" >notify</div> 
+                        <div class='itemtitle'>2.断开连接</div>
+                        <div class="clickbtn" tapmode="active" onclick="disconnectbt()" >断开连接</div>
+                        <div class='itemtitle'>3.关闭蓝牙</div>
+                        <div class="clickbtn" tapmode="active" onclick="closebt()" >关闭蓝牙</div>  
+                </div>
+        </div>
+</body>
+    
+</html>
