@@ -1,110 +1,205 @@
 <!DOCTYPE html>
-<html lang='zh-CN'>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="maximum-scale=1.0, minimum-scale=1.0, user-scalable=0, initial-scale=1.0, width=device-width"/>
-    <meta name="format-detection" content="telephone=no, email=no, date=no, address=no">
-    <title>WinA</title>
-    <link rel="stylesheet" type="text/css" href="../css/api,css">
-    <link rel="stylesheet" type="text/css" href="css/box.css" />
-    <script type="text/javascript" src="script/public.js"></script>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=2.0,minimum-scale=1.0,initial-scale=1.0" />
+    <title>title</title>
+    <link rel="stylesheet" type="text/css" href="../css/api.css" />
     <style>
-            p{
-                    color:#999;
-                    padding:5px;
-            }
+
     </style>
-        <head>        
-    </head>
-     <script type='text/javascript'>
-     function opbt(){
-        var obj = api.require('btmodule');
-        obj.OpenBT();
-        }
-        
-     function scanbt(){
-        var obj = api.require('btmodule');
-        obj.ScanBT();
-        }
-        
-     function readbt(){
-        var obj = api.require('btmodule');
-        var param = {
-        service: "6e400001-b5a3-f393-e0a9-e50e24dcca9e",
-        charUUID: "6e400002-b5a3-f393-e0a9-e50e24dcca9e"
-        };
-        obj.ReadBT(param, function(ret, err) {
-        var msg = ret.received;
-        api.toast({
-        msg: msg
-        });
-        });
-        }
-        
-     function writebt(){
-        var obj = api.require('btmodule');
-        var param = {
-        service: "6e400001-b5a3-f393-e0a9-e50e24dcca9e",
-        charUUID: "6e400002-b5a3-f393-e0a9-e50e24dcca9e",
-         data: 25
-         };
-         obj.WriteBT(param);
-        if(ret){
-         alert('xieshuchenggong');
-         }
-     }
-     
-       
-     function notifybt(){
-        var obj = api.require('btmodule');
-        var param = {
-        service: "6e400001-b5a3-f393-e0a9-e50e24dcca9e",
-        charUUID: "6e400003-b5a3-f393-e0a9-e50e24dcca9e",
-        enable: true
-        };
-        obj.NotifyBT(param, function(ret, err) {
-        var msg = ret.received;
-        api.toast({
-        msg: msg
-        });
-        });
-        }
-        
-     
-     
-    function disconnectbt(){
-       var obj = api.require('btmodule');
-       obj.DisConnectBT();
-       }
-       
-       
-    function closebt(){
-       var obj = api.require('btmodule');
-       obj.CloseBT();
-       }
-    
-    
-        </script>
-    
-   <body>
-    <div id="wrap">
-        <div id="main">
-                <br>
-                        <div class='itemtitle'>1.打开蓝牙</div>
-                        <div class="clickbtn" tapmode="active" onclick="opbt()" >打开蓝牙</div> 
-                        <div class='itemtitle'>2.连接蓝牙</div>
-                        <div class="clickbtn" tapmode="active" onclick="scanbt()" >连接蓝牙</div>
-                        <div class='itemtitle'>3.读取数据</div>
-                        <div class="clickbtn" tapmode="active" onclick="readbt()" >读取数据</div>  
-                        <div class='itemtitle'>3.写数据</div>
-                        <div class="clickbtn" tapmode="active" onclick="writebt()" >写数据</div>  
-                        <div class='itemtitle'>4.notify</div>
-                        <div class="clickbtn" tapmode="active" onclick="notifybt()" >notify</div> 
-                        <div class='itemtitle'>2.断开连接</div>
-                        <div class="clickbtn" tapmode="active" onclick="disconnectbt()" >断开连接</div>
-                        <div class='itemtitle'>3.关闭蓝牙</div>
-                        <div class="clickbtn" tapmode="active" onclick="closebt()" >关闭蓝牙</div>  
-                </div>
-        </div>
+</head>
+
+<body>
+    <button onclick="initManager()">initManager</button>
+    <button onclick="scan()">scan</button>
+    <button onclick="stopScan()">stopScan</button>
+    <button onclick="getPeripheral()">getPeripheral</button>
+    <button onclick="connect()">connect</button>
+    <button onclick="disconnect()">disconnect</button>
+    <button onclick="aa()">isConnected</button>
+    <button type="button" onclick="setNotify()" name="button">setNotify</button>
+    <button type="button" onclick="discoverCharacteristics()" name="button">discoverCharacteristics</button>
+    <button type="button" onclick="writeValueForCharacteristic()" name="button">writeValueForCharacteristic</button>
+    <button type="button" onclick="openFrame1()" name="button">openFrame</button>
 </body>
+<script type="text/javascript" src="../script/api.js"></script>
+<script type="text/javascript">
+    function login() {
+        api.ajax({
+            url: 'http://tongcheng_char.yhtyt.com/admin/login/test',
+            method: 'post',
+            data: {
+                values: {
+                    name: 'haha'
+                }
+            }
+        }, function(ret, err) {
+            if (ret) {
+                alert(JSON.stringify(ret));
+            } else {
+                alert(JSON.stringify(err));
+            }
+        })
+    }
     
+        function initManager() {
+         var ble = api.require('ble');
+            ble.initManager({
+                //single:true
+            },function(ret) {
+                if (ret.state == "poweredOn") {
+                    api.alert({
+                        msg: "初始化成功"
+                    });
+                }
+            });
+        };
+
+        function scan() {
+            var ble = api.require('ble');
+            ble.scan({
+                //serviceUUIDs: ['E2C56DB5-DFFB-48D2-B060-D0F5A71096E0']
+            }, function(ret) {
+
+                alert(JSON.stringify(ret));
+
+            });
+        }
+
+        function stopScan() {
+            var ble = api.require('ble');
+            ble.stopScan();
+        }
+
+        function getPeripheral() {
+            var ble = api.require('ble');
+            ble.getPeripheral(function(ret) {
+                alert(JSON.stringify(ret));
+            });
+        }
+
+        function getPeripheralRssi() {
+
+            var ble = api.require('ble');
+            ble.getPeripheralRssi({
+                peripheralUUID: uuid
+            }, function(ret, err) {
+                alert(JSON.stringify(ret));
+                alert(JSON.stringify(err));
+            })
+        }
+
+        function connect() {
+            var ble = api.require('ble');
+            ble.connect({
+                peripheralUUID: "CF:FD:C5:28:20:26",
+            }, function(ret, err) {
+                if (ret.status) {
+                    alert("连接成功！");
+                } else {
+                    alert(err.code);
+                }
+            });
+        }
+
+        function disconnect() {
+            var ble = api.require('ble');
+            ble.disconnect({
+                peripheralUUID: "CF:FD:C5:28:20:26"
+            }, function(ret, err) {
+                if (ret.status) {
+                    alert("断开连接成功！");
+                } else {
+                    alert(err.code);
+                }
+
+            });
+        }
+
+        function aa() {
+            var ble = api.require('ble');
+            ble.isConnected({
+                peripheralUUID: "CF:FD:C5:28:20:26"
+            }, function(ret) {
+                if (ret.status) {
+                    alert('已连接');
+                } else {
+                    alert("已断开");
+                }
+            });
+        }
+
+        function setNotify() {
+            var ble = api.require('ble');
+            ble.setNotify({
+                peripheralUUID: 'CF:FD:C5:28:20:26',
+                serviceUUID: '',
+                characteristicUUID: ''
+            }, function(ret) {
+                if (ret) {
+                    api.alert({
+                        msg: JSON.stringify(ret)
+                    });
+                }
+            });
+        }
+
+        function discoverCharacteristics() {
+            var ble = api.require('ble');
+            ble.discoverCharacteristics({
+
+                serviceUUID: '',
+                peripheralUUID: 'CF:FD:C5:28:20:26'
+
+            }, function(ret) {
+                if (ret) {
+                    api.alert({
+                        msg: JSON.stringify(ret)
+                    });
+                }
+            });
+        }
+
+        function writeValueForCharacteristic() {
+            var ble = api.require('ble');
+            ble.writeValueForCharacteristic({
+                peripheralUUID: '',
+                serviceUUID: '',
+                characteristicUUID: '',
+                value: ''
+            }, function(ret) {
+                if (ret) {
+                    api.alert({
+                        msg: JSON.stringify(ret)
+                    });
+                }
+            });
+        }
+
+        function openFrame1() {
+            alert(11);
+            api.openFrame({
+                name: 'page2',
+                url: './amap.html',
+                rect: {
+                    x: 0,
+                    y: 0,
+                    w: 320,
+                    h: 480
+                },
+                pageParam: {
+                    name: 'test'
+                },
+                bounces: true,
+                bgColor: 'rgba(0,0,0,0)',
+                vScrollBarEnabled: true,
+                hScrollBarEnabled: true
+            });
+
+        }
+
+</script>
+
 </html>
